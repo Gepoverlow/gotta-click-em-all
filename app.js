@@ -8,6 +8,13 @@ const score = document.getElementById("score");
 const run = document.getElementById("run");
 const caught = document.getElementById("caught");
 const cashIn = document.getElementById("cash-in");
+const containerStore = document.querySelector(".container-store");
+const greatBall = document.getElementById("greatball");
+const ultraBall = document.getElementById("ultraball");
+const masterBall = document.getElementById("masterball");
+const greatSpan = document.getElementById("great-span");
+const ultraSpan = document.getElementById("ultra-span");
+const masterSpan = document.getElementById("master-span");
 
 const pokemonArray = [];
 const rarities = [
@@ -30,6 +37,9 @@ class Game {
     this.spawnBonus = 100;
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
+    this.greatBalls = 0;
+    this.ultraBalls = 0;
+    this.masterBalls = 0;
   }
 
   init() {
@@ -39,11 +49,14 @@ class Game {
     this.spawnBonus = 100;
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
+    this.greatBalls = 0;
+    this.ultraBalls = 0;
+    this.masterBalls = 0;
     start.textContent = "Click to restart";
-    pokeballs.textContent = `${this.count} Pokeballs thrown`;
-    cashIn.textContent = `(click me to cash in ${this.cashInValue} as score!)`;
-    score.textContent = `Your score is ${this.score}`;
     run.textContent = "Run away Safely!";
+    containerStore.style.visibility = "visible";
+    this.updateCount();
+    this.updateShop();
     spawnPokemonFromCategory();
     this.caught.forEach((pokemon) => (pokemon.count = 0));
     this.updateArray();
@@ -104,7 +117,6 @@ class Game {
     this.count++;
     this.score = this.score + pokemon.value;
     pokemon.count++;
-    console.log(pokemon);
     this.updateCount();
     this.updateArray();
     spawnPokemonFromCategory();
@@ -141,9 +153,26 @@ class Game {
     this.cashInValue = 0;
     this.count = 0;
 
-    pokeballs.textContent = `${this.count} Pokeballs thrown`;
-    cashIn.textContent = `(click me to cash in ${this.cashInValue} as score!)`;
-    score.textContent = `Your score is ${this.score}`;
+    this.updateCount();
+  }
+
+  buyPokeball(pokeball) {
+    if (pokeball === "greatball") {
+      this.greatBalls++;
+      this.catchRate = this.catchRate + 5;
+    } else if (pokeball === "ultraball") {
+      this.ultraBalls++;
+      this.catchRate = this.catchRate + 20;
+    } else if (pokeball === "masterball") {
+      this.masterBalls++;
+      this.catchRate = this.catchRate + 50;
+    }
+  }
+
+  updateShop() {
+    greatSpan.textContent = `x${this.greatBalls}`;
+    ultraSpan.textContent = `x${this.ultraBalls}`;
+    masterSpan.textContent = `x${this.masterBalls}`;
   }
 }
 
@@ -194,19 +223,19 @@ function rarityCalculator(id) {
 
 function valueCalculator(id) {
   if (id > 149) {
-    return 12000;
+    return 1500;
   } else if (id > 141 && id < 150) {
-    return 6000;
-  } else if (id > 128 && id < 142) {
-    return 3000;
-  } else if (id > 101 && id < 129) {
-    return 2000;
-  } else if (id > 80 && id < 102) {
     return 1000;
+  } else if (id > 128 && id < 142) {
+    return 700;
+  } else if (id > 101 && id < 129) {
+    return 400;
+  } else if (id > 80 && id < 102) {
+    return 200;
   } else if (id > 60 && id < 81) {
-    return 500;
+    return 100;
   } else {
-    return 250;
+    return 50;
   }
 }
 
@@ -264,7 +293,6 @@ const game = new Game(0, 0);
 
 start.addEventListener("click", () => {
   game.init();
-  //  spawnPokemonFromCategory();
 });
 
 image.addEventListener("click", () => {
@@ -278,6 +306,21 @@ run.addEventListener("click", () => {
 
 cashIn.addEventListener("click", () => {
   game.cashInPokeballs();
+});
+
+greatBall.addEventListener("click", () => {
+  game.buyPokeball("greatball");
+  game.updateShop();
+});
+
+ultraBall.addEventListener("click", () => {
+  game.buyPokeball("ultraball");
+  game.updateShop();
+});
+
+masterBall.addEventListener("click", () => {
+  game.buyPokeball("masterball");
+  game.updateShop();
 });
 
 getPokemons(pokeURL);

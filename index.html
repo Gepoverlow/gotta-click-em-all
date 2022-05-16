@@ -9,14 +9,34 @@
   </head>
   <body>
     <div class="container-all">
-      <h2 id="start">Click to start Catching!</h2>
-      <h3 id="wild-pokemon"></h3>
-      <img id="pokemon-img" src="" alt="" />
-      <p id="catch-rate"></p>
-      <h3 id="pokeballs"></h3>
-      <p id="cash-in"></p>
-      <h3 id="score"></h3>
-      <h4 id="run"></h4>
+      <div class="container-game">
+        <div class="container-store">
+          <div id="greatball">
+            <img class="pokeballs" src="./images/great.webp" alt="greatball" />
+            <span id="great-span">x 0</span>
+          </div>
+          <div id="ultraball">
+            <img class="pokeballs" src="./images/ultra.webp" alt="ultraball" />
+            <span id="ultra-span">x 0</span>
+          </div>
+          <div id="masterball">
+            <img class="pokeballs" src="./images/master.png" alt="masterball" />
+            <span id="master-span">x 0</span>
+          </div>
+        </div>
+        <div class="container-main">
+          <h2 id="start">Click to start Catching!</h2>
+          <h3 id="wild-pokemon"></h3>
+          <img id="pokemon-img" src="" alt="" />
+          <p id="catch-rate"></p>
+          <h3 id="pokeballs"></h3>
+          <p id="cash-in"></p>
+          <h3 id="score"></h3>
+          <h4 id="run"></h4>
+        </div>
+        <div class="container-purchased">a</div>
+      </div>
+
       <div id="caught"></div>
     </div>
     <script src="app.js"></script>

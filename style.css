@@ -4,7 +4,13 @@
   margin: 0;
 }
 
-.container-all {
+.container-game {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.container-main {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,4 +30,29 @@
   align-items: center;
   justify-content: center;
   gap: 3px;
+}
+
+.container-store {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  visibility: hidden;
+}
+
+.pokeballs {
+  width: 50px;
+  height: auto;
+  object-fit: cover;
+}
+
+#greatball,
+#ultraball,
+#masterball {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 }
