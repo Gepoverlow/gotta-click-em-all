@@ -2,10 +2,12 @@ const pokeURL = "https://pokeapi.co/api/v2/pokemon?limit=151&offset=0";
 const image = document.getElementById("pokemon-img");
 const catchRate = document.getElementById("catch-rate");
 const start = document.getElementById("start");
-const berries = document.getElementById("berries");
+const wildPokemon = document.getElementById("wild-pokemon");
+const pokeballs = document.getElementById("pokeballs");
 const score = document.getElementById("score");
 const run = document.getElementById("run");
 const caught = document.getElementById("caught");
+const cashIn = document.getElementById("cash-in");
 
 const pokemonArray = [];
 const rarities = [
@@ -26,13 +28,20 @@ class Game {
     this.currentPokemon;
     this.catchRate = 100;
     this.spawnBonus = 100;
+    this.cashInValue = 1;
+    this.cashInMultiplier = 1;
   }
 
   init() {
     this.count = 0;
     this.score = 0;
+    this.catchRate = 100;
+    this.spawnBonus = 100;
+    this.cashInValue = 1;
+    this.cashInMultiplier = 1;
     start.textContent = "Click to restart";
-    berries.textContent = `${this.count} Pokeballs thrown`;
+    pokeballs.textContent = `${this.count} Pokeballs thrown`;
+    cashIn.textContent = `(click me to cash in ${this.cashInValue} as score!)`;
     score.textContent = `Your score is ${this.score}`;
     run.textContent = "Run away Safely!";
     spawnPokemonFromCategory();
@@ -41,7 +50,8 @@ class Game {
   }
 
   updateCount() {
-    berries.textContent = `${this.count} Pokeballs thrown`;
+    pokeballs.textContent = `${this.count} Pokeballs thrown`;
+    cashIn.textContent = `(click me to cash in ${this.cashInValue} as score!)`;
     score.textContent = `Your score is ${this.score}`;
   }
 
@@ -90,7 +100,7 @@ class Game {
     }
   }
 
-  succesCatch(pokemon, cr) {
+  succesCatch(pokemon) {
     this.count++;
     this.score = this.score + pokemon.value;
     pokemon.count++;
@@ -103,7 +113,6 @@ class Game {
   failedCatch(pokemon) {
     this.count++;
     this.updateCount();
-    console.log("failed");
   }
 
   runAwaySafely() {
@@ -118,6 +127,23 @@ class Game {
     for (let i = 0; i < this.caught.length; i++) {
       createPokemonDOM(this.caught[i]);
     }
+  }
+
+  updateCashInValue() {
+    this.cashInValue = this.count * this.cashInMultiplier;
+    cashIn.textContent = `(click me to cash in ${this.cashInValue.toFixed(
+      2
+    )} as score!) * 1/${this.cashInMultiplier} ratio`;
+  }
+
+  cashInPokeballs() {
+    this.score = this.score + this.cashInValue;
+    this.cashInValue = 0;
+    this.count = 0;
+
+    pokeballs.textContent = `${this.count} Pokeballs thrown`;
+    cashIn.textContent = `(click me to cash in ${this.cashInValue} as score!)`;
+    score.textContent = `Your score is ${this.score}`;
   }
 }
 
@@ -190,14 +216,13 @@ function spawnPokemon(rarity) {
   );
   let rng = Math.floor(Math.random() * chosenPokemons.length);
 
+  wildPokemon.textContent = `A wild ${chosenPokemons[rng].name} appeared!`;
   image.src = chosenPokemons[rng].sprite;
   game.currentPokemon = chosenPokemons[rng];
 }
 
 function spawnPokemonFromCategory() {
   let random = Math.floor(Math.random() * game.spawnBonus) + 1;
-
-  console.log(random);
 
   if (random >= 63 && random <= 100) {
     spawnPokemon("Very Common");
@@ -213,21 +238,6 @@ function spawnPokemonFromCategory() {
     spawnPokemon("Mythic");
   } else if (random === 1) spawnPokemon("Legendary");
 }
-
-const game = new Game(0, 0);
-
-start.addEventListener("click", () => {
-  game.init();
-  //  spawnPokemonFromCategory();
-});
-
-image.addEventListener("click", () => {
-  game.attemptCatch();
-});
-
-run.addEventListener("click", () => {
-  game.runAwaySafely();
-});
 
 function createPokemonDOM(pokemon) {
   const div = document.createElement("div");
@@ -249,5 +259,25 @@ function emptyNode(parent) {
     parent.firstChild.remove();
   }
 }
+
+const game = new Game(0, 0);
+
+start.addEventListener("click", () => {
+  game.init();
+  //  spawnPokemonFromCategory();
+});
+
+image.addEventListener("click", () => {
+  game.attemptCatch();
+  game.updateCashInValue();
+});
+
+run.addEventListener("click", () => {
+  game.runAwaySafely();
+});
+
+cashIn.addEventListener("click", () => {
+  game.cashInPokeballs();
+});
 
 getPokemons(pokeURL);
