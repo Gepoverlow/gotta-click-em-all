@@ -3,3 +3,25 @@
   padding: 0;
   margin: 0;
 }
+
+.container-all {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 1em 3em 2em 3em;
+}
+
+#caught {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.pokemon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}

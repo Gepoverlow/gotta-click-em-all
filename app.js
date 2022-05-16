@@ -5,6 +5,7 @@ const start = document.getElementById("start");
 const berries = document.getElementById("berries");
 const score = document.getElementById("score");
 const run = document.getElementById("run");
+const caught = document.getElementById("caught");
 
 const pokemonArray = [];
 const rarities = [
@@ -21,9 +22,10 @@ class Game {
   constructor(count, score) {
     this.count = count;
     this.score = score;
-    this.caught = [];
+    this.caught = [...pokemonArray];
     this.currentPokemon;
     this.catchRate = 100;
+    this.spawnBonus = 100;
   }
 
   init() {
@@ -34,6 +36,8 @@ class Game {
     score.textContent = `Your score is ${this.score}`;
     run.textContent = "Run away Safely!";
     spawnPokemonFromCategory();
+    this.caught.forEach((pokemon) => (pokemon.count = 0));
+    this.updateArray();
   }
 
   updateCount() {
@@ -52,7 +56,7 @@ class Game {
       catchRate.textContent = `V. Common ${vCommonCR.toFixed(2)}% Catch Rate`;
       this.calcSuccess(vCommonCR, rng, pokemon);
     } else if (pokemon.rarity === "Common") {
-      let commonCR = this.catchRate / 14; //7.15
+      let commonCR = this.catchRate / 15; //7.15
       catchRate.textContent = `Common ${commonCR.toFixed(2)}% Catch Rate`;
       this.calcSuccess(commonCR, rng, pokemon);
     } else if (pokemon.rarity === "Uncommon") {
@@ -89,8 +93,10 @@ class Game {
   succesCatch(pokemon, cr) {
     this.count++;
     this.score = this.score + pokemon.value;
+    pokemon.count++;
+    console.log(pokemon);
     this.updateCount();
-    console.log(`I catched a ${pokemon.name}!`);
+    this.updateArray();
     spawnPokemonFromCategory();
   }
 
@@ -102,6 +108,16 @@ class Game {
 
   runAwaySafely() {
     spawnPokemonFromCategory();
+  }
+
+  updateArray() {
+    this.caught = [...pokemonArray];
+
+    emptyNode(caught);
+
+    for (let i = 0; i < this.caught.length; i++) {
+      createPokemonDOM(this.caught[i]);
+    }
   }
 }
 
@@ -152,7 +168,7 @@ function rarityCalculator(id) {
 
 function valueCalculator(id) {
   if (id > 149) {
-    return 10000;
+    return 12000;
   } else if (id > 141 && id < 150) {
     return 6000;
   } else if (id > 128 && id < 142) {
@@ -179,7 +195,9 @@ function spawnPokemon(rarity) {
 }
 
 function spawnPokemonFromCategory() {
-  let random = Math.floor(Math.random() * 100) + 1;
+  let random = Math.floor(Math.random() * game.spawnBonus) + 1;
+
+  console.log(random);
 
   if (random >= 63 && random <= 100) {
     spawnPokemon("Very Common");
@@ -210,5 +228,26 @@ image.addEventListener("click", () => {
 run.addEventListener("click", () => {
   game.runAwaySafely();
 });
+
+function createPokemonDOM(pokemon) {
+  const div = document.createElement("div");
+  const p = document.createElement("p");
+  const img = document.createElement("img");
+
+  img.src = pokemon.sprite;
+  div.appendChild(img);
+
+  p.textContent = pokemon.count;
+  div.appendChild(p);
+
+  div.className = "pokemon";
+  caught.appendChild(div);
+}
+
+function emptyNode(parent) {
+  while (parent.firstChild) {
+    parent.firstChild.remove();
+  }
+}
 
 getPokemons(pokeURL);
