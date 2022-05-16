@@ -12,9 +12,12 @@ const containerStore = document.querySelector(".container-store");
 const greatBall = document.getElementById("greatball");
 const ultraBall = document.getElementById("ultraball");
 const masterBall = document.getElementById("masterball");
-const greatSpan = document.getElementById("great-span");
-const ultraSpan = document.getElementById("ultra-span");
-const masterSpan = document.getElementById("master-span");
+const greatQuantity = document.getElementById("great-span");
+const ultraQuantity = document.getElementById("ultra-span");
+const masterQuantity = document.getElementById("master-span");
+const greatPrice = document.getElementById("great-price");
+const ultraPrice = document.getElementById("ultra-price");
+const masterPrice = document.getElementById("master-price");
 
 const pokemonArray = [];
 const rarities = [
@@ -40,6 +43,9 @@ class Game {
     this.greatBalls = 0;
     this.ultraBalls = 0;
     this.masterBalls = 0;
+    this.greatPrice = 300;
+    this.ultraPrice = 2500;
+    this.masterPrice = 10000;
   }
 
   init() {
@@ -52,6 +58,9 @@ class Game {
     this.greatBalls = 0;
     this.ultraBalls = 0;
     this.masterBalls = 0;
+    this.greatPrice = 300;
+    this.ultraPrice = 2500;
+    this.masterPrice = 10000;
     start.textContent = "Click to restart";
     run.textContent = "Run away Safely!";
     containerStore.style.visibility = "visible";
@@ -157,22 +166,35 @@ class Game {
   }
 
   buyPokeball(pokeball) {
-    if (pokeball === "greatball") {
+    if (pokeball === "greatball" && this.score > this.greatPrice) {
+      this.score = this.score - this.greatPrice;
+      this.updateCount();
       this.greatBalls++;
-      this.catchRate = this.catchRate + 5;
-    } else if (pokeball === "ultraball") {
-      this.ultraBalls++;
       this.catchRate = this.catchRate + 20;
-    } else if (pokeball === "masterball") {
+      this.greatPrice = this.greatPrice * 2;
+    } else if (pokeball === "ultraball" && this.score > this.ultraPrice) {
+      this.score = this.score - this.ultraPrice;
+      this.updateCount();
+      this.ultraBalls++;
+      this.catchRate = this.catchRate + 100;
+      this.ultraPrice = this.ultraPrice * 2;
+    } else if (pokeball === "masterball" && this.score > this.masterPrice) {
+      this.score = this.score - this.masterPrice;
+      this.updateCount();
       this.masterBalls++;
-      this.catchRate = this.catchRate + 50;
+      this.catchRate = this.catchRate + 300;
+      this.masterPrice = this.masterPrice * 2;
     }
   }
 
   updateShop() {
-    greatSpan.textContent = `x${this.greatBalls}`;
-    ultraSpan.textContent = `x${this.ultraBalls}`;
-    masterSpan.textContent = `x${this.masterBalls}`;
+    greatQuantity.textContent = `x${this.greatBalls} (+20% additive Catch Rate ea)`;
+    ultraQuantity.textContent = `x${this.ultraBalls} (+100% additive Catch Rate ea)`;
+    masterQuantity.textContent = `x${this.masterBalls} (+300% additive Catch Rate ea)`;
+
+    greatPrice.textContent = `Costs ${this.greatPrice} score`;
+    ultraPrice.textContent = `Costs ${this.ultraPrice} score`;
+    masterPrice.textContent = `Costs ${this.masterPrice} score`;
   }
 }
 
@@ -311,16 +333,19 @@ cashIn.addEventListener("click", () => {
 greatBall.addEventListener("click", () => {
   game.buyPokeball("greatball");
   game.updateShop();
+  console.log(game.catchRate);
 });
 
 ultraBall.addEventListener("click", () => {
   game.buyPokeball("ultraball");
   game.updateShop();
+  console.log(game.catchRate);
 });
 
 masterBall.addEventListener("click", () => {
   game.buyPokeball("masterball");
   game.updateShop();
+  console.log(game.catchRate);
 });
 
 getPokemons(pokeURL);
