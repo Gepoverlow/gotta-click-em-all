@@ -40,6 +40,7 @@ class Game {
     this.spawnBonus = 100;
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
+    this.valueMultiplier = 2; //
     this.greatBalls = 0;
     this.ultraBalls = 0;
     this.masterBalls = 0;
@@ -55,6 +56,7 @@ class Game {
     this.spawnBonus = 100;
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
+    this.valueMultiplier = 2; //
     this.greatBalls = 0;
     this.ultraBalls = 0;
     this.masterBalls = 0;
@@ -224,13 +226,10 @@ function pokemonFactory(response) {
     count: 0,
   };
 }
-
 function rarityCalculator(id) {
-  if (id > 149) {
+  if (id >= 144) {
     return "Legendary";
-  } else if (id > 141 && id < 150) {
-    return "Mythic";
-  } else if (id > 128 && id < 142) {
+  } else if (id > 128 && id < 144) {
     return "Very Rare";
   } else if (id > 101 && id < 129) {
     return "Rare";
@@ -244,20 +243,18 @@ function rarityCalculator(id) {
 }
 
 function valueCalculator(id) {
-  if (id > 149) {
-    return 1500;
-  } else if (id > 141 && id < 150) {
-    return 1000;
-  } else if (id > 128 && id < 142) {
-    return 700;
+  if (id >= 144) {
+    return 1200 * game.valueMultiplier;
+  } else if (id > 128 && id < 144) {
+    return 500 * game.valueMultiplier;
   } else if (id > 101 && id < 129) {
-    return 400;
+    return 300 * game.valueMultiplier;
   } else if (id > 80 && id < 102) {
-    return 200;
+    return 200 * game.valueMultiplier;
   } else if (id > 60 && id < 81) {
-    return 100;
+    return 100 * game.valueMultiplier;
   } else {
-    return 50;
+    return 50 * game.valueMultiplier;
   }
 }
 
@@ -285,9 +282,9 @@ function spawnPokemonFromCategory() {
     spawnPokemon("Rare");
   } else if (random >= 4 && random < 9) {
     spawnPokemon("Very Rare");
-  } else if (random >= 2 && random < 4) {
-    spawnPokemon("Mythic");
-  } else if (random === 1) spawnPokemon("Legendary");
+  } else if (random < 4) {
+    spawnPokemon("Legendary");
+  }
 }
 
 function createPokemonDOM(pokemon) {
