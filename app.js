@@ -9,15 +9,22 @@ const run = document.getElementById("run");
 const caught = document.getElementById("caught");
 const cashIn = document.getElementById("cash-in");
 const containerStore = document.querySelector(".container-store");
-const greatBall = document.getElementById("greatball");
-const ultraBall = document.getElementById("ultraball");
-const masterBall = document.getElementById("masterball");
+
+const greatBall = document.getElementById("greatball-img");
+const ultraBall = document.getElementById("ultraball-img");
+const masterBall = document.getElementById("masterball-img");
 const greatQuantity = document.getElementById("great-span");
 const ultraQuantity = document.getElementById("ultra-span");
 const masterQuantity = document.getElementById("master-span");
 const greatPrice = document.getElementById("great-price");
 const ultraPrice = document.getElementById("ultra-price");
 const masterPrice = document.getElementById("master-price");
+
+const rareCandy = document.getElementById("rare-candy");
+
+const candyQuantity = document.getElementById("candy-span");
+
+const candyPrice = document.getElementById("candy-price");
 
 const pokemonArray = [];
 const rarities = [
@@ -40,13 +47,15 @@ class Game {
     this.spawnBonus = 100;
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
-    this.valueMultiplier = 2; //
+    this.valueMultiplier = 1;
     this.greatBalls = 0;
     this.ultraBalls = 0;
     this.masterBalls = 0;
     this.greatPrice = 300;
     this.ultraPrice = 2500;
     this.masterPrice = 10000;
+    this.rareCandies = 0;
+    this.candyPrice = 1000;
   }
 
   init() {
@@ -56,13 +65,15 @@ class Game {
     this.spawnBonus = 100;
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
-    this.valueMultiplier = 2; //
+    this.valueMultiplier = 1;
     this.greatBalls = 0;
     this.ultraBalls = 0;
     this.masterBalls = 0;
     this.greatPrice = 300;
     this.ultraPrice = 2500;
     this.masterPrice = 10000;
+    this.rareCandies = 0;
+    this.candyPrice = 1000;
     start.textContent = "Click to restart";
     run.textContent = "Run away Safely!";
     containerStore.style.visibility = "visible";
@@ -126,7 +137,7 @@ class Game {
 
   succesCatch(pokemon) {
     this.count++;
-    this.score = this.score + pokemon.value;
+    this.score = this.score + pokemon.value * this.valueMultiplier;
     pokemon.count++;
     this.updateCount();
     this.updateArray();
@@ -168,19 +179,19 @@ class Game {
   }
 
   buyPokeball(pokeball) {
-    if (pokeball === "greatball" && this.score > this.greatPrice) {
+    if (pokeball === "greatball" && this.score >= this.greatPrice) {
       this.score = this.score - this.greatPrice;
       this.updateCount();
       this.greatBalls++;
       this.catchRate = this.catchRate + 20;
       this.greatPrice = this.greatPrice * 2;
-    } else if (pokeball === "ultraball" && this.score > this.ultraPrice) {
+    } else if (pokeball === "ultraball" && this.score >= this.ultraPrice) {
       this.score = this.score - this.ultraPrice;
       this.updateCount();
       this.ultraBalls++;
       this.catchRate = this.catchRate + 100;
       this.ultraPrice = this.ultraPrice * 2;
-    } else if (pokeball === "masterball" && this.score > this.masterPrice) {
+    } else if (pokeball === "masterball" && this.score >= this.masterPrice) {
       this.score = this.score - this.masterPrice;
       this.updateCount();
       this.masterBalls++;
@@ -189,14 +200,26 @@ class Game {
     }
   }
 
+  buyMisc(item) {
+    if (item === "rare candy" && this.score >= this.candyPrice) {
+      this.score = this.score - this.candyPrice;
+      this.rareCandies++;
+      this.valueMultiplier = this.valueMultiplier + 0.25;
+      this.candyPrice = this.candyPrice * 2;
+      this.updateCount();
+    }
+  }
+
   updateShop() {
     greatQuantity.textContent = `x${this.greatBalls} (+20% additive Catch Rate ea)`;
     ultraQuantity.textContent = `x${this.ultraBalls} (+100% additive Catch Rate ea)`;
     masterQuantity.textContent = `x${this.masterBalls} (+300% additive Catch Rate ea)`;
+    candyQuantity.textContent = `x${this.rareCandies} (+25% additive Score on catch ea)`;
 
     greatPrice.textContent = `Costs ${this.greatPrice} score`;
     ultraPrice.textContent = `Costs ${this.ultraPrice} score`;
     masterPrice.textContent = `Costs ${this.masterPrice} score`;
+    candyPrice.textContent = `Costs ${this.candyPrice} score`;
   }
 }
 
@@ -244,17 +267,17 @@ function rarityCalculator(id) {
 
 function valueCalculator(id) {
   if (id >= 144) {
-    return 1200 * game.valueMultiplier;
+    return 1200;
   } else if (id > 128 && id < 144) {
-    return 500 * game.valueMultiplier;
+    return 500;
   } else if (id > 101 && id < 129) {
-    return 300 * game.valueMultiplier;
+    return 300;
   } else if (id > 80 && id < 102) {
-    return 200 * game.valueMultiplier;
+    return 200;
   } else if (id > 60 && id < 81) {
-    return 100 * game.valueMultiplier;
+    return 100;
   } else {
-    return 50 * game.valueMultiplier;
+    return 50;
   }
 }
 
@@ -330,19 +353,21 @@ cashIn.addEventListener("click", () => {
 greatBall.addEventListener("click", () => {
   game.buyPokeball("greatball");
   game.updateShop();
-  console.log(game.catchRate);
 });
 
 ultraBall.addEventListener("click", () => {
   game.buyPokeball("ultraball");
   game.updateShop();
-  console.log(game.catchRate);
 });
 
 masterBall.addEventListener("click", () => {
   game.buyPokeball("masterball");
   game.updateShop();
-  console.log(game.catchRate);
+});
+
+rareCandy.addEventListener("click", () => {
+  game.buyMisc("rare candy");
+  game.updateShop();
 });
 
 getPokemons(pokeURL);

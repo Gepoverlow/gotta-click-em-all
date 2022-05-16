@@ -42,17 +42,15 @@
   visibility: hidden;
 }
 
-.pokeballs {
-  width: 50px;
-  height: auto;
-  object-fit: cover;
-}
-
-#greatball,
-#ultraball,
-#masterball {
+.shop-item {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
+}
+
+.shop-item > img {
+  width: 25px;
+  height: auto;
+  object-fit: cover;
 }
