@@ -67,12 +67,13 @@ class Game {
     this.stopTimer = false;
     this.seconds = 0;
     this.isTimerRunning = false;
+    this.isThereWinner = false;
   }
 
   init() {
     this.count = 0;
     this.score = 0;
-    this.catchRate = 100;
+    this.catchRate = 10000;
     this.spawnBonus = 100;
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
@@ -86,10 +87,11 @@ class Game {
     this.rareCandies = 0;
     this.candyPrice = 1000;
     this.expShares = 0;
-    this.sharePrice = 500;
+    this.sharePrice = 50;
     this.stopTimer = false;
     this.seconds = 0;
     this.isTimerRunning = false;
+    this.isThereWinner = false;
     restart.textContent = "Click to Restart";
     run.textContent = "Run away Safely!";
     containerStore.style.visibility = "visible";
@@ -173,8 +175,12 @@ class Game {
     let uncatched = pokemonArray.filter((pokemon) => pokemon.count !== 0);
     remaining.textContent = `${uncatched.length} / ${pokemonArray.length}`;
 
-    if (uncatched.length === pokemonArray.length) {
+    if (
+      uncatched.length === pokemonArray.length &&
+      this.isThereWinner === false
+    ) {
       this.displayWinningMsg();
+      this.isThereWinner = true;
     }
   }
 
@@ -295,7 +301,7 @@ class Game {
   displayWinningMsg() {
     this.stopTimer = true;
     alert(
-      `Good Job!! You are now a Master Pokemon and it only took you ${this.seconds} !`
+      `Good Job!! You are now a Master Pokemon and it only took you ${this.seconds} seconds!`
     );
   }
 }
