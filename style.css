@@ -7,11 +7,15 @@
 body {
   background-color: #e4000f;
   color: white;
+  font-family: "Inconsolata", monospace;
 }
 
 #navbar {
+  display: flex;
+  align-items: center;
   padding: 20px;
   border: 3px solid black;
+  gap: 5em;
 }
 
 #start {
@@ -49,6 +53,15 @@ body {
 
   background-size: cover;
   object-fit: cover;
+}
+
+.pokemon > p {
+  color: black;
+}
+
+.pokemon > img {
+  width: 90px;
+  height: 90px;
 }
 
 .container-store {

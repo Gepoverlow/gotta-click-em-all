@@ -10,6 +10,7 @@ const run = document.getElementById("run");
 const caught = document.getElementById("caught");
 const cashIn = document.getElementById("cash-in");
 const containerStore = document.querySelector(".container-store");
+const remaining = document.getElementById("remaining");
 
 const greatBall = document.getElementById("greatball-img");
 const ultraBall = document.getElementById("ultraball-img");
@@ -61,13 +62,13 @@ class Game {
     this.rareCandies = 0;
     this.candyPrice = 1000;
     this.expShares = 0;
-    this.sharePrice = 200;
+    this.sharePrice = 500;
   }
 
   init() {
     this.count = 0;
     this.score = 0;
-    this.catchRate = 100;
+    this.catchRate = 10000;
     this.spawnBonus = 100;
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
@@ -81,7 +82,7 @@ class Game {
     this.rareCandies = 0;
     this.candyPrice = 1000;
     this.expShares = 0;
-    this.sharePrice = 200;
+    this.sharePrice = 500;
     restart.textContent = "Click to Restart";
     run.textContent = "Run away Safely!";
     containerStore.style.visibility = "visible";
@@ -96,6 +97,7 @@ class Game {
     pokeballs.textContent = `${this.count} Pokeballs thrown`;
     cashIn.textContent = `(click me to cash in ${this.cashInValue} as score!)`;
     score.textContent = `Your score is ${this.score}`;
+    this.updateCashInValue();
   }
 
   attemptCatch() {
@@ -149,12 +151,22 @@ class Game {
     pokemon.count++;
     this.updateCount();
     this.updateArray();
+    this.updateRemaining();
     spawnPokemonFromCategory();
   }
 
   failedCatch(pokemon) {
     this.count++;
     this.updateCount();
+  }
+
+  updateRemaining() {
+    let uncatched = pokemonArray.filter((pokemon) => pokemon.count !== 0);
+    remaining.textContent = `${uncatched.length} / ${pokemonArray.length}`;
+
+    if (uncatched.length === pokemonArray.length) {
+      console.log("you won!!!");
+    }
   }
 
   runAwaySafely() {
