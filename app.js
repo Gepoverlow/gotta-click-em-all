@@ -25,12 +25,15 @@ const masterPrice = document.getElementById("master-price");
 
 const rareCandy = document.getElementById("rare-candy");
 const expShare = document.getElementById("exp-share");
+const berry = document.getElementById("berry-img");
 
 const candyQuantity = document.getElementById("candy-span");
 const shareQuantity = document.getElementById("share-span");
+const berryQuantity = document.getElementById("berry-span");
 
 const candyPrice = document.getElementById("candy-price");
 const sharePrice = document.getElementById("share-price");
+const berryPrice = document.getElementById("berry-price");
 
 const pokemonArray = [];
 const rarities = [
@@ -64,6 +67,8 @@ class Game {
     this.candyPrice = 1000;
     this.expShares = 0;
     this.sharePrice = 500;
+    this.berries = 0;
+    this.berryPrice = 350;
     this.stopTimer = false;
     this.seconds = 0;
     this.isTimerRunning = false;
@@ -73,7 +78,7 @@ class Game {
   init() {
     this.count = 0;
     this.score = 0;
-    this.catchRate = 10000;
+    this.catchRate = 100;
     this.spawnBonus = 100;
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
@@ -87,7 +92,9 @@ class Game {
     this.rareCandies = 0;
     this.candyPrice = 1000;
     this.expShares = 0;
-    this.sharePrice = 50;
+    this.sharePrice = 500;
+    this.berries = 0;
+    this.berryPrice = 350;
     this.stopTimer = false;
     this.seconds = 0;
     this.isTimerRunning = false;
@@ -242,6 +249,12 @@ class Game {
       this.valueMultiplier = this.valueMultiplier + 0.25;
       this.candyPrice = this.candyPrice * 2;
       this.updateCount();
+    } else if (item === "berry" && this.score >= this.berryPrice) {
+      this.score = this.score - this.berryPrice;
+      this.berries++;
+      this.cashInMultiplier = this.cashInMultiplier + 2;
+      this.berryPrice = this.berryPrice * 2;
+      this.updateCount();
     }
   }
 
@@ -251,12 +264,14 @@ class Game {
     masterQuantity.textContent = `x${this.masterBalls} (+300% additive Catch Rate ea)`;
     candyQuantity.textContent = `x${this.rareCandies} (+25% additive Score on catch ea)`;
     shareQuantity.textContent = `x${this.expShares} (+1 automatic Catch Attempt per second ea)`;
+    berryQuantity.textContent = `x${this.berries} (+2 to the Cash in pokeballs ratio ea)`;
 
     greatPrice.textContent = `Costs ${this.greatPrice} score`;
     ultraPrice.textContent = `Costs ${this.ultraPrice} score`;
     masterPrice.textContent = `Costs ${this.masterPrice} score`;
     candyPrice.textContent = `Costs ${this.candyPrice} score`;
     sharePrice.textContent = `Costs ${this.sharePrice} score`;
+    berryPrice.textContent = `Costs ${this.berryPrice} score`;
   }
 
   activateAutomaticCatcher() {
@@ -469,6 +484,11 @@ rareCandy.addEventListener("click", () => {
 
 expShare.addEventListener("click", () => {
   game.buyAutomaticCatcher();
+});
+
+berry.addEventListener("click", () => {
+  game.buyMisc("berry");
+  game.updateShop();
 });
 
 getPokemons(pokeURL);
