@@ -68,7 +68,7 @@ class Game {
   init() {
     this.count = 0;
     this.score = 0;
-    this.catchRate = 10000;
+    this.catchRate = 100;
     this.spawnBonus = 100;
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
