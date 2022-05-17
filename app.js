@@ -264,6 +264,7 @@ class Game {
 }
 
 async function getPokemons(url) {
+  start.textContent = "Loading Pokemons...";
   const data = await fetch(url);
   const response = await data.json();
 
@@ -277,6 +278,7 @@ async function processPokemon(url) {
   const response = await data.json();
 
   pokemonArray.push(pokemonFactory(response));
+  start.textContent = "Start Clicking!";
 }
 
 function pokemonFactory(response) {
@@ -378,9 +380,11 @@ function emptyNode(parent) {
 const game = new Game(0, 0);
 
 start.addEventListener("click", () => {
-  start.style.display = "none";
+  if (start.textContent === "Start Clicking!") {
+    start.style.display = "none";
 
-  game.init();
+    game.init();
+  }
 });
 
 restart.addEventListener("click", () => {
