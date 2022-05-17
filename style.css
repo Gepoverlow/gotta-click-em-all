@@ -49,10 +49,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 1px;
 
-  background-size: cover;
-  object-fit: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .pokemon > p {
@@ -60,8 +60,8 @@ body {
 }
 
 .pokemon > img {
-  width: 90px;
-  height: 90px;
+  width: 70%;
+  height: auto;
 }
 
 .container-store {

@@ -11,6 +11,7 @@ const caught = document.getElementById("caught");
 const cashIn = document.getElementById("cash-in");
 const containerStore = document.querySelector(".container-store");
 const remaining = document.getElementById("remaining");
+const currentTime = document.getElementById("timer");
 
 const greatBall = document.getElementById("greatball-img");
 const ultraBall = document.getElementById("ultraball-img");
@@ -63,6 +64,9 @@ class Game {
     this.candyPrice = 1000;
     this.expShares = 0;
     this.sharePrice = 500;
+    this.stopTimer = false;
+    this.seconds = 0;
+    this.isTimerRunning = false;
   }
 
   init() {
@@ -83,6 +87,9 @@ class Game {
     this.candyPrice = 1000;
     this.expShares = 0;
     this.sharePrice = 500;
+    this.stopTimer = false;
+    this.seconds = 0;
+    this.isTimerRunning = false;
     restart.textContent = "Click to Restart";
     run.textContent = "Run away Safely!";
     containerStore.style.visibility = "visible";
@@ -91,6 +98,8 @@ class Game {
     spawnPokemonFromCategory();
     this.caught.forEach((pokemon) => (pokemon.count = 0));
     this.updateArray();
+    this.updateRemaining();
+    this.timer();
   }
 
   updateCount() {
@@ -165,7 +174,7 @@ class Game {
     remaining.textContent = `${uncatched.length} / ${pokemonArray.length}`;
 
     if (uncatched.length === pokemonArray.length) {
-      console.log("you won!!!");
+      this.displayWinningMsg();
     }
   }
 
@@ -272,6 +281,22 @@ class Game {
 
       this.activateAutomaticCatcher();
     }
+  }
+
+  timer() {
+    if (this.stopTimer === true) return;
+    this.seconds++;
+    setTimeout(() => {
+      this.timer();
+      currentTime.textContent = `${this.seconds}`;
+    }, 1000);
+  }
+
+  displayWinningMsg() {
+    this.stopTimer = true;
+    alert(
+      `Good Job!! You are now a Master Pokemon and it only took you ${this.seconds} !`
+    );
   }
 }
 
