@@ -2,6 +2,7 @@ const pokeURL = "https://pokeapi.co/api/v2/pokemon?limit=151&offset=0";
 const image = document.getElementById("pokemon-img");
 const catchRate = document.getElementById("catch-rate");
 const start = document.getElementById("start");
+const restart = document.getElementById("restart");
 const wildPokemon = document.getElementById("wild-pokemon");
 const pokeballs = document.getElementById("pokeballs");
 const score = document.getElementById("score");
@@ -81,7 +82,7 @@ class Game {
     this.candyPrice = 1000;
     this.expShares = 0;
     this.sharePrice = 200;
-    start.textContent = "Click to restart";
+    restart.textContent = "Click to Restart";
     run.textContent = "Run away Safely!";
     containerStore.style.visibility = "visible";
     this.updateCount();
@@ -232,28 +233,31 @@ class Game {
   }
 
   activateAutomaticCatcher() {
-    let thrown = false;
-    for (let i = 0; i < 1; i++) {
-      setTimeout(function () {
-        game.attemptCatch();
-        game.updateCashInValue();
-        thrown = true;
+    if (game.expShares > 0) {
+      let thrown = false;
+      for (let i = 0; i < 1; i++) {
+        setTimeout(function () {
+          game.attemptCatch();
+          game.updateCashInValue();
+          thrown = true;
+        }, 1000);
+      }
+      setTimeout(() => {
+        if (thrown) {
+          game.activateAutomaticCatcher();
+        }
       }, 1000);
     }
-    setTimeout(() => {
-      if (thrown) {
-        game.activateAutomaticCatcher();
-      }
-    }, 1100);
   }
 
   buyAutomaticCatcher() {
     if (this.score >= this.sharePrice) {
       this.score = this.score - this.sharePrice;
       this.expShares++;
-      this.sharePrice = this.sharePrice + 200;
+      this.sharePrice = this.sharePrice * 2;
       this.updateCount();
       this.updateShop();
+
       this.activateAutomaticCatcher();
     }
   }
@@ -359,6 +363,10 @@ function createPokemonDOM(pokemon) {
 
   div.className = "pokemon";
   caught.appendChild(div);
+
+  if (pokemon.count > 0) {
+    div.style.backgroundImage = `url(${"./images/pokeball-bg.png"})`;
+  }
 }
 
 function emptyNode(parent) {
@@ -370,6 +378,12 @@ function emptyNode(parent) {
 const game = new Game(0, 0);
 
 start.addEventListener("click", () => {
+  start.style.display = "none";
+
+  game.init();
+});
+
+restart.addEventListener("click", () => {
   game.init();
 });
 

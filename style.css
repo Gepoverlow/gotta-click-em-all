@@ -4,10 +4,25 @@
   margin: 0;
 }
 
+body {
+  background-color: #e4000f;
+  color: white;
+}
+
+#navbar {
+  padding: 20px;
+  border: 3px solid black;
+}
+
+#start {
+  cursor: pointer;
+}
+
 .container-game {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  border: 5px solid black;
 }
 
 .container-main {
@@ -22,6 +37,7 @@
 #caught {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
+  border: 5px solid black;
 }
 
 .pokemon {
@@ -30,13 +46,16 @@
   align-items: center;
   justify-content: center;
   gap: 3px;
+
+  background-size: cover;
+  object-fit: cover;
 }
 
 .container-store {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: start;
   gap: 10px;
 
   visibility: hidden;
