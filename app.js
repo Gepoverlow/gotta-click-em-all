@@ -21,10 +21,13 @@ const ultraPrice = document.getElementById("ultra-price");
 const masterPrice = document.getElementById("master-price");
 
 const rareCandy = document.getElementById("rare-candy");
+const expShare = document.getElementById("exp-share");
 
 const candyQuantity = document.getElementById("candy-span");
+const shareQuantity = document.getElementById("share-span");
 
 const candyPrice = document.getElementById("candy-price");
+const sharePrice = document.getElementById("share-price");
 
 const pokemonArray = [];
 const rarities = [
@@ -56,6 +59,8 @@ class Game {
     this.masterPrice = 10000;
     this.rareCandies = 0;
     this.candyPrice = 1000;
+    this.expShares = 0;
+    this.sharePrice = 200;
   }
 
   init() {
@@ -74,6 +79,8 @@ class Game {
     this.masterPrice = 10000;
     this.rareCandies = 0;
     this.candyPrice = 1000;
+    this.expShares = 0;
+    this.sharePrice = 200;
     start.textContent = "Click to restart";
     run.textContent = "Run away Safely!";
     containerStore.style.visibility = "visible";
@@ -215,11 +222,40 @@ class Game {
     ultraQuantity.textContent = `x${this.ultraBalls} (+100% additive Catch Rate ea)`;
     masterQuantity.textContent = `x${this.masterBalls} (+300% additive Catch Rate ea)`;
     candyQuantity.textContent = `x${this.rareCandies} (+25% additive Score on catch ea)`;
+    shareQuantity.textContent = `x${this.expShares} (+1 automatic Catch Attempt per second ea)`;
 
     greatPrice.textContent = `Costs ${this.greatPrice} score`;
     ultraPrice.textContent = `Costs ${this.ultraPrice} score`;
     masterPrice.textContent = `Costs ${this.masterPrice} score`;
     candyPrice.textContent = `Costs ${this.candyPrice} score`;
+    sharePrice.textContent = `Costs ${this.sharePrice} score`;
+  }
+
+  activateAutomaticCatcher() {
+    let thrown = false;
+    for (let i = 0; i < 1; i++) {
+      setTimeout(function () {
+        game.attemptCatch();
+        game.updateCashInValue();
+        thrown = true;
+      }, 1000);
+    }
+    setTimeout(() => {
+      if (thrown) {
+        game.activateAutomaticCatcher();
+      }
+    }, 1100);
+  }
+
+  buyAutomaticCatcher() {
+    if (this.score >= this.sharePrice) {
+      this.score = this.score - this.sharePrice;
+      this.expShares++;
+      this.sharePrice = this.sharePrice + 200;
+      this.updateCount();
+      this.updateShop();
+      this.activateAutomaticCatcher();
+    }
   }
 }
 
@@ -368,6 +404,10 @@ masterBall.addEventListener("click", () => {
 rareCandy.addEventListener("click", () => {
   game.buyMisc("rare candy");
   game.updateShop();
+});
+
+expShare.addEventListener("click", () => {
+  game.buyAutomaticCatcher();
 });
 
 getPokemons(pokeURL);
