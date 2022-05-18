@@ -99,6 +99,13 @@ class Game {
     this.seconds = 0;
     this.isTimerRunning = false;
     this.isThereWinner = false;
+    clearInterval(this.timerTimeoutId);
+    this.timerTimeoutId = setInterval(() => {
+      if (this.stopTimer === true) return;
+      this.seconds++;
+      currentTime.textContent = `${this.seconds}`;
+    }, 1000);
+
     restart.textContent = "Click to Restart";
     run.textContent = "Run away Safely!";
     containerStore.style.visibility = "visible";
@@ -108,7 +115,7 @@ class Game {
     this.caught.forEach((pokemon) => (pokemon.count = 0));
     this.updateArray();
     this.updateRemaining();
-    this.timer();
+    // this.timer();
   }
 
   updateCount() {
@@ -302,15 +309,6 @@ class Game {
 
       this.activateAutomaticCatcher();
     }
-  }
-
-  timer() {
-    if (this.stopTimer === true) return;
-    this.seconds++;
-    setTimeout(() => {
-      this.timer();
-      currentTime.textContent = `${this.seconds}`;
-    }, 1000);
   }
 
   displayWinningMsg() {
