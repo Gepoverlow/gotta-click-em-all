@@ -50,34 +50,34 @@ class Game {
   constructor(count, score) {
     this.count = count;
     this.score = score;
-    this.caught = [...pokemonArray];
-    this.currentPokemon;
-    this.catchRate = 100;
-    this.spawnBonus = 100;
-    this.cashInValue = 1;
-    this.cashInMultiplier = 1;
-    this.valueMultiplier = 1;
-    this.greatBalls = 0;
-    this.ultraBalls = 0;
-    this.masterBalls = 0;
-    this.greatPrice = 300;
-    this.ultraPrice = 2500;
-    this.masterPrice = 10000;
-    this.rareCandies = 0;
-    this.candyPrice = 1000;
-    this.expShares = 0;
-    this.sharePrice = 500;
-    this.berries = 0;
-    this.berryPrice = 350;
-    this.stopTimer = false;
-    this.seconds = 0;
-    this.isTimerRunning = false;
-    this.isThereWinner = false;
+    // this.caught = [...pokemonArray];
+    // this.currentPokemon;
+    // this.catchRate = 100;
+    // this.spawnBonus = 100;
+    // this.cashInValue = 1;
+    // this.cashInMultiplier = 1;
+    // this.valueMultiplier = 1;
+    // this.greatBalls = 0;
+    // this.ultraBalls = 0;
+    // this.masterBalls = 0;
+    // this.greatPrice = 300;
+    // this.ultraPrice = 2500;
+    // this.masterPrice = 10000;
+    // this.rareCandies = 0;
+    // this.candyPrice = 1000;
+    // this.expShares = 0;
+    // this.sharePrice = 500;
+    // this.berries = 0;
+    // this.berryPrice = 350;
+    // this.stopTimer = false;
+    // this.seconds = 0;
+    // this.isThereWinner = false;
   }
 
   init() {
     this.count = 0;
     this.score = 0;
+    this.caught = [...pokemonArray];
     this.catchRate = 100;
     this.spawnBonus = 100;
     this.cashInValue = 1;
@@ -97,7 +97,6 @@ class Game {
     this.berryPrice = 350;
     this.stopTimer = false;
     this.seconds = 0;
-    this.isTimerRunning = false;
     this.isThereWinner = false;
     clearInterval(this.timerTimeoutId);
     this.timerTimeoutId = setInterval(() => {
@@ -283,19 +282,26 @@ class Game {
 
   activateAutomaticCatcher() {
     if (game.expShares > 0) {
-      let thrown = false;
-      for (let i = 0; i < 1; i++) {
-        setTimeout(function () {
+      clearInterval(this.catcherId);
+      this.catcherId = setInterval(() => {
+        for (let i = 0; i < this.expShares; i++) {
           game.attemptCatch();
           game.updateCashInValue();
-          thrown = true;
-        }, 1000);
-      }
-      setTimeout(() => {
-        if (thrown) {
-          game.activateAutomaticCatcher();
         }
       }, 1000);
+      // let thrown = false;
+      // for (let i = 0; i < 1; i++) {
+      //   setTimeout(function () {
+      //     game.attemptCatch();
+      //     game.updateCashInValue();
+      //     thrown = true;
+      //   }, 1000);
+      // }
+      // setTimeout(() => {
+      //   if (thrown) {
+      //     game.activateAutomaticCatcher();
+      //   }
+      // }, 1000);
     }
   }
 
@@ -316,6 +322,14 @@ class Game {
     alert(
       `Good Job!! You are now a Master Pokemon and it only took you ${this.seconds} seconds!`
     );
+  }
+
+  makeStartingDate() {
+    this.startDate = new Date();
+  }
+
+  makeFinisinghDate() {
+    this.finishDate = new Date();
   }
 }
 
