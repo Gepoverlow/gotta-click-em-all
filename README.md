@@ -1,6 +1,6 @@
 Gotta Click `em All!
 
-Check the live version out at -> https://gepoverlow.github.io/clicking-game/
+Check the live version out at -> https://gepoverlow.github.io/gotta-click-em-all/
 
 The main objective of the game is to capture all first gen pokemons. And how do you catch them? By clicking lots of times!
 
