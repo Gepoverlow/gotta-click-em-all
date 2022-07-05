@@ -36,15 +36,7 @@ const sharePrice = document.getElementById("share-price");
 const berryPrice = document.getElementById("berry-price");
 
 const pokemonArray = [];
-const rarities = [
-  "Very Common",
-  "Common",
-  "Uncommon",
-  "Rare",
-  "Very Rare",
-  "Mythic",
-  "Legendary",
-];
+const rarities = ["Very Common", "Common", "Uncommon", "Rare", "Very Rare", "Mythic", "Legendary"];
 
 class Game {
   constructor(count, score) {
@@ -78,8 +70,8 @@ class Game {
     this.count = 0;
     this.score = 0;
     this.caught = [...pokemonArray];
-    this.catchRate = 100;
-    this.spawnBonus = 100;
+    this.catchRate = 10000; //100
+    this.spawnBonus = 100; //100
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
     this.valueMultiplier = 1;
@@ -92,12 +84,15 @@ class Game {
     this.rareCandies = 0;
     this.candyPrice = 1000;
     this.expShares = 0;
-    this.sharePrice = 500;
+    this.sharePrice = 50; //500
     this.berries = 0;
     this.berryPrice = 350;
     this.stopTimer = false;
     this.seconds = 0;
     this.isThereWinner = false;
+    this.startDate = undefined;
+    this.finishDate = undefined;
+    this.totalSeconds = undefined;
     clearInterval(this.timerTimeoutId);
     this.timerTimeoutId = setInterval(() => {
       if (this.stopTimer === true) return;
@@ -114,6 +109,7 @@ class Game {
     this.caught.forEach((pokemon) => (pokemon.count = 0));
     this.updateArray();
     this.updateRemaining();
+    this.makeStartingDate();
     // this.timer();
   }
 
@@ -188,10 +184,9 @@ class Game {
     let uncatched = pokemonArray.filter((pokemon) => pokemon.count !== 0);
     remaining.textContent = `${uncatched.length} / ${pokemonArray.length}`;
 
-    if (
-      uncatched.length === pokemonArray.length &&
-      this.isThereWinner === false
-    ) {
+    if (uncatched.length === pokemonArray.length && this.isThereWinner === false) {
+      this.makeFinisinghDate();
+      this.calculateDateDifference();
       this.displayWinningMsg();
       this.isThereWinner = true;
     }
@@ -213,9 +208,9 @@ class Game {
 
   updateCashInValue() {
     this.cashInValue = this.count * this.cashInMultiplier;
-    cashIn.textContent = `(click me to cash in ${this.cashInValue.toFixed(
-      2
-    )} as score!) * 1/${this.cashInMultiplier} ratio`;
+    cashIn.textContent = `(click me to cash in ${this.cashInValue.toFixed(2)} as score!) * 1/${
+      this.cashInMultiplier
+    } ratio`;
   }
 
   cashInPokeballs() {
@@ -319,9 +314,7 @@ class Game {
 
   displayWinningMsg() {
     this.stopTimer = true;
-    alert(
-      `Good Job!! You are now a Master Pokemon and it only took you ${this.seconds} seconds!`
-    );
+    alert(`Good Job!! You are now a Master Pokemon and it only took you ${this.seconds} seconds!`);
   }
 
   makeStartingDate() {
@@ -330,6 +323,12 @@ class Game {
 
   makeFinisinghDate() {
     this.finishDate = new Date();
+  }
+
+  calculateDateDifference() {
+    this.totalSeconds = (this.finishDate.getTime() - this.startDate.getTime()) / 1000;
+
+    console.log(this.totalSeconds);
   }
 }
 
@@ -348,7 +347,10 @@ async function processPokemon(url) {
   const response = await data.json();
 
   pokemonArray.push(pokemonFactory(response));
-  start.textContent = "Start Clicking!";
+
+  setTimeout(() => {
+    start.textContent = "Start Clicking!";
+  }, 10000);
 }
 
 function pokemonFactory(response) {
@@ -394,9 +396,7 @@ function valueCalculator(id) {
 }
 
 function spawnPokemon(rarity) {
-  let chosenPokemons = pokemonArray.filter(
-    (pokemon) => pokemon.rarity === rarity
-  );
+  let chosenPokemons = pokemonArray.filter((pokemon) => pokemon.rarity === rarity);
   let rng = Math.floor(Math.random() * chosenPokemons.length);
 
   wildPokemon.textContent = `A wild ${chosenPokemons[rng].name} appeared!`;

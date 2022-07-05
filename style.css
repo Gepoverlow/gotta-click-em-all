@@ -22,6 +22,10 @@ body {
   cursor: pointer;
 }
 
+.container-all {
+  position: relative;
+}
+
 .container-game {
   display: flex;
   justify-content: space-evenly;
@@ -90,5 +94,18 @@ body {
 #cash-in {
   cursor: pointer;
   padding: 2px;
+  background-color: rgb(248, 240, 240);
+}
+
+#winning-message {
+  visibility: visible;
+  position: absolute;
+  width: 400px;
+  height: 200px;
+  right: 0;
+  left: 0;
+  top: 0;
+  /* bottom: 0; */
+  margin: auto;
   background-color: rgb(248, 240, 240);
 }
