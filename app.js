@@ -70,8 +70,8 @@ class Game {
     this.count = 0;
     this.score = 0;
     this.caught = [...pokemonArray];
-    this.catchRate = 10000; //100
-    this.spawnBonus = 100; //100
+    this.catchRate = 100;
+    this.spawnBonus = 100;
     this.cashInValue = 1;
     this.cashInMultiplier = 1;
     this.valueMultiplier = 1;
@@ -84,7 +84,7 @@ class Game {
     this.rareCandies = 0;
     this.candyPrice = 1000;
     this.expShares = 0;
-    this.sharePrice = 50; //500
+    this.sharePrice = 500;
     this.berries = 0;
     this.berryPrice = 350;
     this.stopTimer = false;
