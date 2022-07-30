@@ -39,37 +39,10 @@ const pokemonArray = [];
 const rarities = ["Very Common", "Common", "Uncommon", "Rare", "Very Rare", "Mythic", "Legendary"];
 
 class Game {
-  constructor(count, score) {
-    this.count = count;
-    this.score = score;
-    // this.caught = [...pokemonArray];
-    // this.currentPokemon;
-    // this.catchRate = 100;
-    // this.spawnBonus = 100;
-    // this.cashInValue = 1;
-    // this.cashInMultiplier = 1;
-    // this.valueMultiplier = 1;
-    // this.greatBalls = 0;
-    // this.ultraBalls = 0;
-    // this.masterBalls = 0;
-    // this.greatPrice = 300;
-    // this.ultraPrice = 2500;
-    // this.masterPrice = 10000;
-    // this.rareCandies = 0;
-    // this.candyPrice = 1000;
-    // this.expShares = 0;
-    // this.sharePrice = 500;
-    // this.berries = 0;
-    // this.berryPrice = 350;
-    // this.stopTimer = false;
-    // this.seconds = 0;
-    // this.isThereWinner = false;
-  }
-
   init() {
     this.count = 0;
     this.score = 0;
-    this.caught = [...pokemonArray];
+    this.allPokemons = [...pokemonArray];
     this.catchRate = 100;
     this.spawnBonus = 100;
     this.cashInValue = 1;
@@ -106,7 +79,7 @@ class Game {
     this.updateCount();
     this.updateShop();
     spawnPokemonFromCategory();
-    this.caught.forEach((pokemon) => (pokemon.count = 0));
+    this.allPokemons.forEach((pokemon) => (pokemon.count = 0));
     this.updateArray();
     this.updateRemaining();
     this.makeStartingDate();
@@ -197,20 +170,18 @@ class Game {
   }
 
   updateArray() {
-    this.caught = [...pokemonArray];
+    this.allPokemons = [...pokemonArray];
 
     emptyNode(caught);
 
-    for (let i = 0; i < this.caught.length; i++) {
-      createPokemonDOM(this.caught[i]);
+    for (let i = 0; i < this.allPokemons.length; i++) {
+      createPokemonDOM(this.allPokemons[i]);
     }
   }
 
   updateCashInValue() {
     this.cashInValue = this.count * this.cashInMultiplier;
-    cashIn.textContent = `(click me to cash in ${this.cashInValue.toFixed(2)} as score!) * 1/${
-      this.cashInMultiplier
-    } ratio`;
+    cashIn.textContent = `(click me to cash in ${this.cashInValue.toFixed(2)} as score!) * 1/${this.cashInMultiplier} ratio`;
   }
 
   cashInPokeballs() {
@@ -284,19 +255,6 @@ class Game {
           game.updateCashInValue();
         }
       }, 1000);
-      // let thrown = false;
-      // for (let i = 0; i < 1; i++) {
-      //   setTimeout(function () {
-      //     game.attemptCatch();
-      //     game.updateCashInValue();
-      //     thrown = true;
-      //   }, 1000);
-      // }
-      // setTimeout(() => {
-      //   if (thrown) {
-      //     game.activateAutomaticCatcher();
-      //   }
-      // }, 1000);
     }
   }
 
@@ -347,10 +305,6 @@ async function processPokemon(url) {
   const response = await data.json();
 
   pokemonArray.push(pokemonFactory(response));
-
-  setTimeout(() => {
-    start.textContent = "Start Clicking!";
-  }, 10000);
 }
 
 function pokemonFactory(response) {
@@ -441,17 +395,25 @@ function createPokemonDOM(pokemon) {
   }
 }
 
+function handleLoading(array) {
+  if (array.length === 151) {
+    start.textContent = "Start Clicking!";
+    return true;
+  }
+}
+
 function emptyNode(parent) {
   while (parent.firstChild) {
     parent.firstChild.remove();
   }
 }
 
-const game = new Game(0, 0);
+const game = new Game();
 
 start.addEventListener("click", () => {
   if (start.textContent === "Start Clicking!") {
     start.style.display = "none";
+    cashIn.style.backgroundColor = "rgb(248, 240, 240)";
 
     game.init();
   }
@@ -504,3 +466,11 @@ berry.addEventListener("click", () => {
 });
 
 getPokemons(pokeURL);
+
+const arrayStateChecker = setInterval(() => {
+  if (handleLoading(pokemonArray)) {
+    clearInterval(arrayStateChecker);
+  }
+}, 1000);
+
+handleLoading(pokemonArray);
